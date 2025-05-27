@@ -278,12 +278,33 @@ void PlayerBotChatHandler::ProcessChat(Player* player, uint32_t /*type*/, uint32
                     ""
                 );
                 
-                // Optionally trim quotes
+                // Trim leading whitespace
+                filteredResponse.erase(filteredResponse.begin(), std::find_if(filteredResponse.begin(), filteredResponse.end(),
+                    [](unsigned char ch) { return !std::isspace(ch); }));
+                
+                // Trim trailing whitespace
+                filteredResponse.erase(std::find_if(filteredResponse.rbegin(), filteredResponse.rend(),
+                    [](unsigned char ch) { return !std::isspace(ch); }).base(), filteredResponse.end());
+                
+                // Remove surrounding quotes
                 if (!filteredResponse.empty() && filteredResponse.front() == '"' && filteredResponse.back() == '"')
                     filteredResponse = filteredResponse.substr(1, filteredResponse.size() - 2);
                 
-                // Trim whitespace and empty strings
-                filteredResponse = rtrim(filteredResponse);
+                // Remove trailing "???"
+                if (filteredResponse.size() >= 3 &&
+                    filteredResponse.compare(filteredResponse.size() - 3, 3, "???") == 0)
+                {
+                    filteredResponse.erase(filteredResponse.size() - 3);
+                    // Trim again in case of trailing space
+                    filteredResponse.erase(std::find_if(filteredResponse.rbegin(), filteredResponse.rend(),
+                        [](unsigned char ch) { return !std::isspace(ch); }).base(), filteredResponse.end());
+                }
+                
+                // Remove any leading blank lines
+                size_t firstNonEmpty = filteredResponse.find_first_not_of("\r\n");
+                if (firstNonEmpty != std::string::npos)
+                    filteredResponse = filteredResponse.substr(firstNonEmpty);
+
 
                 // Reacquire pointers by GUID.
                 Player* botPtr = ObjectAccessor::FindPlayer(ObjectGuid(botGuid));
