@@ -274,7 +274,7 @@ void PlayerBotChatHandler::ProcessChat(Player* player, uint32_t /*type*/, uint32
                 // Filter out thinking blocks e.g., <think>Blah</think>
                 std::string filteredResponse = std::regex_replace(
                     response,
-                    std::regex(R"(<think>[\s\S]*?</think>)"),
+                    std::regex(R"(<think>\s*?</think>)", std::regex::icase),
                     ""
                 );
                 
