@@ -273,10 +273,11 @@ void PlayerBotChatHandler::ProcessChat(Player* player, uint32_t /*type*/, uint32
                 // Filter out thinking blocks (e.g., <|start_of_turn|>, <|start_header_id|> etc.)
                 std::string filteredResponse = response;
                 
-                filteredResponse.erase(std::remove_if(filteredResponse.begin(), filteredResponse.end(),
-                    [](char c) {
-                        return c == '<' || c == '|' || c == '>';
-                    }), filteredResponse.end());
+                std::string filteredResponse = std::regex_replace(
+                    response,
+                    std::regex(R"(<think>[\s\S]*?</think>)"),
+                    ""
+                );
                 
                 // Optionally trim quotes
                 if (!filteredResponse.empty() && filteredResponse.front() == '"' && filteredResponse.back() == '"')
