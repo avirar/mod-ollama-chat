@@ -270,6 +270,20 @@ void PlayerBotChatHandler::ProcessChat(Player* player, uint32_t /*type*/, uint32
                 // Use the QueryManager to submit the query.
                 std::future<std::string> responseFuture = SubmitQuery(prompt);
                 std::string response = responseFuture.get();
+                // Filter out thinking blocks (e.g., <|start_of_turn|>, <|start_header_id|> etc.)
+                std::string filteredResponse = response;
+                
+                filteredResponse.erase(std::remove_if(filteredResponse.begin(), filteredResponse.end(),
+                    [](char c) {
+                        return c == '<' || c == '|' || c == '>';
+                    }), filteredResponse.end());
+                
+                // Optionally trim quotes
+                if (!filteredResponse.empty() && filteredResponse.front() == '"' && filteredResponse.back() == '"')
+                    filteredResponse = filteredResponse.substr(1, filteredResponse.size() - 2);
+                
+                // Trim whitespace and empty strings
+                filteredResponse = rtrim(filteredResponse);
 
                 // Reacquire pointers by GUID.
                 Player* botPtr = ObjectAccessor::FindPlayer(ObjectGuid(botGuid));
@@ -299,7 +313,7 @@ void PlayerBotChatHandler::ProcessChat(Player* player, uint32_t /*type*/, uint32
                 if (channelId != 0)
                 {
                     ChatChannelId chanId = static_cast<ChatChannelId>(channelId);
-                    botAI->SayToChannel(response, chanId);
+                    botAI->SayToChannel(filteredResponse, chanId);
                 }
                 else
                 {
