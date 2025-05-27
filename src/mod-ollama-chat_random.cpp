@@ -333,7 +333,7 @@ void OllamaBotRandomChatter::HandleRandomChatter()
             std::string botMapName  = bot->GetMap() ? bot->GetMap()->GetMapName() : "UnknownMap";
 
             return fmt::format(
-                "/no_think"
+                "/no_think "
                 "You are a World of Warcraft player in the Wrath of the Lich King expansion. "
                 "Your name is {}. You are a level {} {}, Race: {}, Gender: {}, Talent Spec: {}, Faction: {}. "
                 "You are currently located in {}, inside the zone '{}' on map '{}'. "
