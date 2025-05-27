@@ -272,11 +272,9 @@ void PlayerBotChatHandler::ProcessChat(Player* player, uint32_t /*type*/, uint32
                 std::future<std::string> responseFuture = SubmitQuery(prompt);
                 std::string response = responseFuture.get();
                 // Filter out thinking blocks e.g., <think>Blah</think>
-                std::string filteredResponse = std::regex_replace(
-                    response,
-                    std::regex(R"(<think>\s*?</think>)", std::regex::icase),
-                    ""
-                );
+                std::regex thinkRegex(R"(<think>[\s\S]*?<\/think>)", std::regex::icase);
+                std::string filteredResponse = std::regex_replace(response, thinkRegex, "");
+
                 
                 // Trim leading whitespace
                 filteredResponse.erase(filteredResponse.begin(), std::find_if(filteredResponse.begin(), filteredResponse.end(),
