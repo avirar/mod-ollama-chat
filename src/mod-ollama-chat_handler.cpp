@@ -25,6 +25,7 @@
 #include <cctype>
 #include <chrono>
 #include <ctime>
+#include <regex>
 
 // For AzerothCore range checks
 #include "GridNotifiersImpl.h"
