@@ -270,9 +270,7 @@ void PlayerBotChatHandler::ProcessChat(Player* player, uint32_t /*type*/, uint32
                 // Use the QueryManager to submit the query.
                 std::future<std::string> responseFuture = SubmitQuery(prompt);
                 std::string response = responseFuture.get();
-                // Filter out thinking blocks (e.g., <|start_of_turn|>, <|start_header_id|> etc.)
-                std::string filteredResponse = response;
-                
+                // Filter out thinking blocks e.g., <think>Blah</think>
                 std::string filteredResponse = std::regex_replace(
                     response,
                     std::regex(R"(<think>[\s\S]*?</think>)"),
