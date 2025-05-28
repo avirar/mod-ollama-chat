@@ -517,7 +517,7 @@ static bool IsBotEligibleForChatChannelLocal(Player* bot, Player* player,
         );
         std::string prompt = fmt::format(
             "/no_think\n"
-            "Only use ASCII characters, no unicode or emojis. Emoticons using ASCII like :) are fine to use. "
+            "Only use ASCII characters, no unicode or emojis. "
             "You are a World of Warcraft player in the Wrath of the Lich King expansion version of the game, but you are also knowledgeable about Vanilla WoW and The Burning Crusade. "
             "Make sure your responses are relevant to the game lore and context. "
             "Your character's name is {} and you are a level {} {}. Your Personality is '{}'. "
