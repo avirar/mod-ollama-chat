@@ -341,12 +341,12 @@ void PlayerBotChatHandler::ProcessChat(Player* player, uint32_t /*type*/, uint32
                 {
                     switch (sourceLocal)
                     {
-                        case SRC_GUILD_LOCAL: botAI->SayToGuild(response); break;
-                        case SRC_PARTY_LOCAL: botAI->SayToParty(response); break;
-                        case SRC_RAID_LOCAL:  botAI->SayToRaid(response); break;
-                        case SRC_SAY_LOCAL:   botAI->Say(response); break;
-                        case SRC_YELL_LOCAL:  botAI->Yell(response); break;
-                        default:              botAI->Say(response); break;
+                        case SRC_GUILD_LOCAL: botAI->SayToGuild(filteredResponse); break;
+                        case SRC_PARTY_LOCAL: botAI->SayToParty(filteredResponse); break;
+                        case SRC_RAID_LOCAL:  botAI->SayToRaid(filteredResponse); break;
+                        case SRC_SAY_LOCAL:   botAI->Say(filteredResponse); break;
+                        case SRC_YELL_LOCAL:  botAI->Yell(filteredResponse); break;
+                        default:              botAI->Say(filteredResponse); break;
                     }
                 }
                 float respDistance = senderPtr->GetDistance(botPtr);
