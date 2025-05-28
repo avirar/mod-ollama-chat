@@ -516,11 +516,12 @@ static bool IsBotEligibleForChatChannelLocal(Player* bot, Player* player,
             playerDistance, locationInfo
         );
         std::string prompt = fmt::format(
+            "/no_think\n"
             "You are a World of Warcraft player in the Wrath of the Lich King expansion version of the game, but you are also knowledgeable about Vanilla WoW and The Burning Crusade. "
             "Make sure your responses are relevant to the game lore and context. "
             "Your character's name is {} and you are a level {} {}. Your Personality is '{}'. "
             "A level {} {} named {} said '{}' in the game chat. "
-            "Reply (under 15 words) relevant to the message and context. {} "
+            "Reply relevant to the message and context. {} "
             "Keep your responses natural and unfiltered, just like real WoW players; embrace common slang, faction pride, and rivalry. "
             "If someone jokes, joke back. If they’re rude, don’t hold back being rude to them. "
             "Show respect to high-level players but be snooty and entitled over lower levels. "
