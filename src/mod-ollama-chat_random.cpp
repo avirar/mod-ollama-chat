@@ -17,6 +17,7 @@
 #include <random>
 #include <thread>
 #include <ctime>
+#include <regex>
 #include "Item.h"
 #include "Bag.h"
 #include "SpellMgr.h"
@@ -361,13 +362,54 @@ void OllamaBotRandomChatter::HandleRandomChatter()
             if (!botPtr) return;
             std::string response = QueryOllamaAPI(prompt);
             if (response.empty()) return;
+            // Filter out thinking blocks e.g., <thunk>Blah</thunk>
+            std::regex thinkRegex(R"(<think>[^<]*?</think>\s*)", std::regex::multiline);
+            std::string filteredResponse = std::regex_replace(response, thinkRegex, "");
+            
+            // Trim leading whitespace
+            filteredResponse.erase(filteredResponse.begin(), 
+                                   std::find_if(filteredResponse.begin(), filteredResponse.end(),
+                                                [](unsigned char ch) { return !std::isspace(ch); }));
+            
+            // Trim trailing whitespace
+            filteredResponse.erase(std::find_if(filteredResponse.rbegin(), filteredResponse.rend(),
+                                               [](unsigned char ch) { return !std::isspace(ch); }).base(),
+                                  filteredResponse.end());
+            
+            // Remove surrounding quotes (e.g., "response here")
+            if (!filteredResponse.empty() && 
+                filteredResponse.front() == '"' && 
+                filteredResponse.back() == '"')
+            {
+                filteredResponse = filteredResponse.substr(1, filteredResponse.size() - 2);
+            }
+            
+            // Remove trailing "???"
+            if (filteredResponse.size() >= 3 &&
+                filteredResponse.compare(filteredResponse.size() - 3, 3, "???") == 0)
+            {
+                filteredResponse.erase(filteredResponse.size() - 3);
+            
+                // Trim again in case of trailing space
+                filteredResponse.erase(std::find_if(filteredResponse.rbegin(), filteredResponse.rend(),
+                                                   [](unsigned char ch) { return !std::isspace(ch); }).base(),
+                                      filteredResponse.end());
+            }
+            
+            // Remove any leading blank lines
+            size_t firstNonEmpty = filteredResponse.find_first_not_of("\r\n");
+            if (firstNonEmpty != std::string::npos)
+            {
+                filteredResponse = filteredResponse.substr(firstNonEmpty);
+            }
+
             botPtr = ObjectAccessor::FindPlayer(ObjectGuid(botGuid));
             if (!botPtr) return;
             PlayerbotAI* botAI = sPlayerbotsMgr->GetPlayerbotAI(botPtr);
             if (!botAI) return;
             if (botPtr->GetGroup())
             {
-                botAI->SayToParty(response);
+                botAI->SayToParty(filteredResponse);
             }
             else
             {
@@ -379,12 +421,12 @@ void OllamaBotRandomChatter::HandleRandomChatter()
                 if (selectedChannel == "Say")
                 {
                     LOG_INFO("server.loading", "Bot Random Chatter Say: {}", response);
-                    botAI->Say(response);
+                    botAI->Say(filteredResponse);
                 }
                 else if (selectedChannel == "General")
                 {
                     LOG_INFO("server.loading", "Bot Random Chatter General: {}", response);
-                    botAI->SayToChannel(response, ChatChannelId::GENERAL);
+                    botAI->SayToChannel(filteredResponse, ChatChannelId::GENERAL);
                 }
             }
         }).detach();
