@@ -341,8 +341,8 @@ void OllamaBotRandomChatter::HandleRandomChatter()
                 "You are currently located in {}, inside the zone '{}' on map '{}'. "
                 "Your Personality is '{}'. "
                 "You glance around the world. Make an observation and make sure to reference the main subject item: {}. "
-                "Comment aloud in character with a statement using casual WoW-style slang and attitude. "
-                "Respond as a real WoW player would: sarcastic, humorous, faction-proud, or boastful.",
+                "Comment aloud in character with a statement using casual WoW-style slang. "
+                "Respond as a real WoW player would. ",
                 botName, botLevel, botClass, botRace, botGender, botRole, botFaction,
                 botAreaName, botZoneName, botMapName,
                 personalityPrompt,
