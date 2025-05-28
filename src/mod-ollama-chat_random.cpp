@@ -334,6 +334,7 @@ void OllamaBotRandomChatter::HandleRandomChatter()
 
             return fmt::format(
                 "/no_think\n"
+                "Only use ASCII characters, no unicode or emojis. Emoticons using ASCII like :) are fine to use. "
                 "You are a World of Warcraft player in the Wrath of the Lich King expansion. "
                 "Your name is {}. You are a level {} {}, Race: {}, Gender: {}, Talent Spec: {}, Faction: {}. "
                 "You are currently located in {}, inside the zone '{}' on map '{}'. "
